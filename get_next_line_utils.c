@@ -6,11 +6,23 @@
 /*   By: ameta <ameta@student.21-school.ru>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/17 12:20:50 by ameta             #+#    #+#             */
-/*   Updated: 2021/01/18 19:31:54 by ameta            ###   ########.fr       */
+/*   Updated: 2021/01/19 00:42:00 by ameta            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
+
+size_t	ft_strlen(const char *s)
+{
+	size_t	i;
+
+	i = 0;
+	if (!s)
+		return (0);
+	while (s[i])
+		i++;
+	return (i);
+}
 
 char	*ft_strdup(const char *s1)
 {
@@ -35,7 +47,7 @@ char	*ft_strdup(const char *s1)
 	return (str);
 }
 
-char	*ft_strchr(const char *s, int c)
+int		ft_strchr(const char *s, int c)
 {
 	int		i;
 	char	*str;
@@ -45,15 +57,15 @@ char	*ft_strchr(const char *s, int c)
 	while (str[i])
 	{
 		if (s[i] == c)
-			return (str + i);
+			return (i);
 		i++;
 	}
 	if (c == 0)
-		return (str + i);
-	return (NULL);
+		return (i);
+	return (-1);
 }
 
-char	*ft_strjoin(char const *s1, char const *s2)
+char	*ft_strjoin(char *s1, char *s2)
 {
 	char	*str;
 	int		i;
