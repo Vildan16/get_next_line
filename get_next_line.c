@@ -6,7 +6,7 @@
 /*   By: ameta <ameta@student.21-school.ru>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/17 12:20:58 by ameta             #+#    #+#             */
-/*   Updated: 2021/01/19 02:19:27 by ameta            ###   ########.fr       */
+/*   Updated: 2021/01/19 04:33:12 by ameta            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,16 +42,26 @@ int get_next_line(int fd, char **line)
     char        *tmp;
     
     if (fd < 0 || !line || BUFFER_SIZE <= 0)
-        return (-1);
-    if (!(buf = (char *)malloc(sizeof(char) * (BUFFER_SIZE + 1))))
-        return (-1);
-    while ((remaining != NULL) | (ret = read(fd, buf, BUFFER_SIZE)))
     {
+        *line = NULL;
+        return (-1);
+    }
+    while (1)
+    {
+        if (!(buf = (char *)malloc(sizeof(char) * (BUFFER_SIZE + 1))))
+            return (-1);
+        ret = read(fd, buf, BUFFER_SIZE);
+        
         if (ret)
             buf[ret] = '\0';
-        if (buf)
+        if (buf != NULL)
             remaining = ft_strjoin(remaining, buf);
-        printf("rem = %s\n", remaining);
+        if (!buf[0] && remaining[0] == '\0')
+        {
+            *line = NULL;
+            return (-1);
+        }
+        
         while ((npos = ft_strchr(remaining, '\n')) != -1)
         {
             tmp = ft_tilln(remaining);
@@ -59,15 +69,19 @@ int get_next_line(int fd, char **line)
             *line = ft_strjoin(*line, tmp);
             remaining += npos + 1;
             free(tmp);
-            free(buf);
-            remaining = NULL;
+            buf = NULL;
             return (1);
         }
+        buf = NULL;
+        if (ret == 0)
+                break ;
     }
-    *line = NULL;
+    *line = ft_strdup("");
+    
     *line = ft_strjoin(*line, remaining);
-    free(remaining);
     remaining = NULL;
+    free(remaining);
+    
     free(buf);
     return (0);
 }

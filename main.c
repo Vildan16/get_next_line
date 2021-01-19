@@ -4,7 +4,7 @@
 
 int main(void)
 {
-    int fd = open("/Users/ameta/Desktop/Projects_C/get_next_line/file", O_RDONLY);
+    int fd = open("/Users/ameta/Desktop/Projects_C/get_next_line/INVALID_FD", O_RDONLY);
     char *line;
     int i;
 
