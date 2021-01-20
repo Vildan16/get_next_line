@@ -6,7 +6,7 @@
 /*   By: ameta <ameta@student.21-school.ru>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/17 12:20:58 by ameta             #+#    #+#             */
-/*   Updated: 2021/01/19 04:33:12 by ameta            ###   ########.fr       */
+/*   Updated: 2021/01/20 17:24:46 by ameta            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,52 +37,54 @@ int get_next_line(int fd, char **line)
 {
     int         ret;
     static char *remaining;
-    char        *buf;
+    char        buf[BUFFER_SIZE + 1];
     int         npos;
     char        *tmp;
     
-    if (fd < 0 || !line || BUFFER_SIZE <= 0)
+    if (fd < 0 || !line || BUFFER_SIZE <= 0 || read(fd, buf, 0) == -1)
     {
-        *line = NULL;
+        if (remaining)
+            free(remaining); 
         return (-1);
     }
-    while (1)
+    while (ft_strchrn(remaining) == -1 && (ret= read(fd, buf, BUFFER_SIZE)))
     {
-        if (!(buf = (char *)malloc(sizeof(char) * (BUFFER_SIZE + 1))))
-            return (-1);
-        ret = read(fd, buf, BUFFER_SIZE);
-        
-        if (ret)
-            buf[ret] = '\0';
-        if (buf != NULL)
-            remaining = ft_strjoin(remaining, buf);
-        if (!buf[0] && remaining[0] == '\0')
+        if (ret == -1)
         {
-            *line = NULL;
+            if (remaining)
+                free(remaining); 
             return (-1);
         }
-        
-        while ((npos = ft_strchr(remaining, '\n')) != -1)
-        {
-            tmp = ft_tilln(remaining);
-            *line = NULL;
-            *line = ft_strjoin(*line, tmp);
-            remaining += npos + 1;
-            free(tmp);
-            buf = NULL;
-            return (1);
-        }
-        buf = NULL;
-        if (ret == 0)
-                break ;
+        buf[ret] = '\0';
+        remaining = ft_strjoin(remaining, buf);
+        if (!remaining)
+            return (-1);
     }
-    *line = ft_strdup("");
-    
-    *line = ft_strjoin(*line, remaining);
-    remaining = NULL;
+    if ((npos = ft_strchrn(remaining)) != -1)
+    {
+        *line = ft_substr(remaining, 0, npos);
+        if (!line)
+        {
+            free(remaining);
+            return (-1);
+        }
+        tmp = ft_substr(remaining, npos + 1, ft_strlen(remaining) - npos);
+        free(remaining);
+        remaining = ft_strdup(tmp);
+        free(tmp);
+        return (1);
+    }
+    if (remaining)
+    {
+        *line = ft_substr(remaining, 0, ft_strlen(remaining)); 
+    }
+    else
+    {
+        *line = malloc(sizeof(char));
+        *line[0] = '\0';
+    }
     free(remaining);
-    
-    free(buf);
-    return (0);
+    remaining = NULL;
+    return (0);   
 }
 

@@ -6,7 +6,7 @@
 /*   By: ameta <ameta@student.21-school.ru>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/17 12:20:07 by ameta             #+#    #+#             */
-/*   Updated: 2021/01/19 03:38:34 by ameta            ###   ########.fr       */
+/*   Updated: 2021/01/20 17:27:08 by ameta            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,17 +14,19 @@
 # define GET_NEXT_LINE_H
 
 # ifndef BUFFER_SIZE
-#  define BUFFER_SIZE 2
+#  define BUFFER_SIZE 32
 # endif
 
 # include <unistd.h>
 # include <stdlib.h>
 # include <stdio.h> //remove
 
-int get_next_line(int fd, char **line);
 char	*ft_strdup(const char *s1);
-int     ft_strchr(const char *s, int c);
+int get_next_line(int fd, char **line);
+int     ft_strchrn(const char *s);
 char	*ft_strjoin(char *s1, char *s2);
 char    *ft_tilln(char *str);
+char	*ft_substr(char const *s, unsigned int start, size_t len);
+size_t	ft_strlen(const char *s);
 
 #endif
