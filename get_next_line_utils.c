@@ -6,13 +6,13 @@
 /*   By: ameta <ameta@student.21-school.ru>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/17 12:20:50 by ameta             #+#    #+#             */
-/*   Updated: 2021/01/20 18:14:13 by ameta            ###   ########.fr       */
+/*   Updated: 2021/01/20 21:29:23 by ameta            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-int	ft_strlen(const char *s)
+int		ft_strlen(const char *s)
 {
 	int	i;
 
@@ -94,17 +94,16 @@ char	*ft_strjoin(char *s1, char *s2)
 	char	*str;
 	int		i;
 	int		j;
-	int len1;
-	int len2;
-	
+	int		len1;
+	int		len2;
+
 	if (!s2 && !s1)
 		return (NULL);
-	j = 0;
 	i = 0;
+	j = 0;
 	len1 = ft_strlen(s1);
 	len2 = ft_strlen(s2);
-	str = malloc(sizeof(char) * (len1 + len2 + 1));
-	if (!str)
+	if (!(str = malloc(sizeof(char) * (len1 + len2 + 1))))
 		return (NULL);
 	while (i < len1)
 	{
@@ -112,11 +111,7 @@ char	*ft_strjoin(char *s1, char *s2)
 		i++;
 	}
 	while (j < len2)
-	{
-		str[i] = s2[j];
-		i++;
-		j++;
-	}
+		str[i++] = s2[j++];
 	str[i] = '\0';
 	free(s1);
 	return (str);
