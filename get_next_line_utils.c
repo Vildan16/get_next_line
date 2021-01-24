@@ -6,7 +6,7 @@
 /*   By: ameta <ameta@student.21-school.ru>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/17 12:20:50 by ameta             #+#    #+#             */
-/*   Updated: 2021/01/20 21:29:23 by ameta            ###   ########.fr       */
+/*   Updated: 2021/01/21 02:25:09 by ameta            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,14 +53,16 @@ char	*ft_substr(char *s, unsigned int start, int len)
 {
 	char	*str;
 	int		i;
+	int		slen;
 
 	if (!s)
 		return (NULL);
+	slen = ft_strlen(s);
 	i = 0;
 	str = (char *)malloc(sizeof(char) * (len + 1));
 	if (!str)
 		return (NULL);
-	while (s[start] && len && start < (unsigned int)ft_strlen(s))
+	while (s[start] && len && start < (unsigned int)slen)
 	{
 		str[i] = s[start];
 		i++;
@@ -113,6 +115,5 @@ char	*ft_strjoin(char *s1, char *s2)
 	while (j < len2)
 		str[i++] = s2[j++];
 	str[i] = '\0';
-	free(s1);
 	return (str);
 }

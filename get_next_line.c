@@ -6,7 +6,7 @@
 /*   By: ameta <ameta@student.21-school.ru>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/17 12:20:58 by ameta             #+#    #+#             */
-/*   Updated: 2021/01/20 22:36:17 by ameta            ###   ########.fr       */
+/*   Updated: 2021/01/21 03:22:34 by ameta            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ int	ft_retline(char **line, char **remaining, int npos)
 	*line = ft_substr(*remaining, 0, npos);
 	if (!line)
 	{
-		free(remaining);
+		free(*remaining);
 		return (0);
 	}
 	tmp = ft_substr(*remaining, npos + 1, ft_strlen(*remaining) - npos);
@@ -36,16 +36,25 @@ int	ft_retline(char **line, char **remaining, int npos)
 	return (1);
 }
 
-int	ft_fillrem(char **remaining, int ret, char *buf)
+int	ft_fillrem(char **remaining, int ret, char **buf)
 {
+	char	*tmp;
+
 	if (ret == -1)
 	{
 		if (*remaining)
 			free(*remaining);
+		free(*buf);
 		return (0);
 	}
-	*remaining = ft_strjoin(*remaining, buf);
-	if (!remaining)
+	(*buf)[ret] = '\0';
+	tmp = ft_strjoin(*remaining, *buf);
+	free(*remaining);
+	if (!tmp)
+		return (0);
+	*remaining = ft_strdup(tmp);
+	free(tmp);
+	if (!(*remaining))
 		return (0);
 	return (1);
 }
@@ -54,20 +63,22 @@ int	get_next_line(int fd, char **line)
 {
 	int			ret;
 	static char	*remaining;
-	char		buf[BUFFER_SIZE + 1];
+	char		*buf;
 	int			npos;
 
-	if (fd < 0 || !line || BUFFER_SIZE <= 0 || read(fd, buf, 0) == -1)
+	buf = malloc(sizeof(char) * (BUFFER_SIZE + 1));
+	if (fd < 0 || !buf || !line || BUFFER_SIZE <= 0)
 	{
 		remaining != NULL ? free(remaining) : 0;
+		buf != NULL ? free(buf) : 0;
 		return (-1);
 	}
 	while (ft_strchrn(remaining) == -1 && (ret = read(fd, buf, BUFFER_SIZE)))
 	{
-		buf[ret] = '\0';
-		if (!ft_fillrem(&remaining, ret, buf))
+		if (!ft_fillrem(&remaining, ret, &buf))
 			return (-1);
 	}
+	buf ? free(buf) : 0;
 	if ((npos = ft_strchrn(remaining)) != -1)
 		return (!(ft_retline(line, &remaining, npos)) ? -1 : 1);
 	*line = remaining != NULL ? ft_substr(remaining, 0, ft_strlen(remaining)) :
